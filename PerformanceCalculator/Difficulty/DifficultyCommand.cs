@@ -15,7 +15,10 @@ using osu.Game.Beatmaps;
 using osu.Game.Online.API;
 using osu.Game.Rulesets;
 using osu.Game.Rulesets.Difficulty;
+using osu.Game.Rulesets.Difficulty.Skills;
+using osu.Game.Rulesets.Mania.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
+using PerformanceCalculatorGUI;
 
 namespace PerformanceCalculator.Difficulty
 {
@@ -41,6 +44,10 @@ namespace PerformanceCalculator.Difficulty
         [UsedImplicitly]
         [Option(Template = "-j|--json", Description = "Output results as JSON.")]
         public bool OutputJson { get; }
+
+        [UsedImplicitly]
+        [Option(Template = "-s|--strain", Description = "Evaluates Strain.")]
+        public bool IncludeStrain { get; }
 
         [UsedImplicitly]
         [Option(Template = "-nc|--no-classic", Description = "Excludes the classic mod.")]
@@ -132,6 +139,17 @@ namespace PerformanceCalculator.Difficulty
             var ruleset = LegacyHelper.GetRulesetFromLegacyID(Ruleset ?? beatmap.BeatmapInfo.Ruleset.OnlineID);
             var mods = NoClassicMod ? getMods(ruleset) : LegacyHelper.ConvertToLegacyDifficultyAdjustmentMods(ruleset, getMods(ruleset));
             var attributes = ruleset.CreateDifficultyCalculator(beatmap).Calculate(mods);
+            var difficultyCalculator = RulesetHelper.GetExtendedDifficultyCalculator(beatmap.BeatmapInfo.Ruleset, beatmap);
+
+            // This is necessary to populate the skills property.
+            difficultyCalculator.Calculate();
+
+            var strains = Array.Empty<Skill>();
+
+            if (difficultyCalculator is IExtendedDifficultyCalculator extendedDifficultyCalculator)
+            {
+                strains = extendedDifficultyCalculator.GetSkills();
+            }
 
             return new Result
             {
@@ -139,7 +157,8 @@ namespace PerformanceCalculator.Difficulty
                 BeatmapId = beatmap.BeatmapInfo.OnlineID,
                 Beatmap = beatmap.BeatmapInfo.ToString(),
                 Mods = mods.Select(m => new APIMod(m)).ToList(),
-                Attributes = attributes
+                Attributes = attributes,
+                Strains = ((Strain)strains[0]).GetCurrentStrainPeaks().ToList()
             };
         }
 
@@ -188,6 +207,9 @@ namespace PerformanceCalculator.Difficulty
 
             [JsonProperty("attributes")]
             public DifficultyAttributes Attributes { get; set; }
+
+            [JsonProperty("strains")]
+            public List<double> Strains { get; set; }
         }
     }
 }
