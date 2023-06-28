@@ -18,6 +18,9 @@ $DEPENDENCIES=@(
 
 dotnet sln $SLN add $DEPENDENCIES
 
+# This dependency is to include strain within the JSON output.
+dotnet add "PerformanceCalculator/PerformanceCalculator.csproj" reference "PerformanceCalculatorGUI/PerformanceCalculatorGUI.csproj"
+
 ForEach ($CSPROJ in $PROJECTS)
 {
     dotnet remove $CSPROJ package ppy.osu.Game

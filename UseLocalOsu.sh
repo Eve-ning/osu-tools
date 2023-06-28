@@ -18,6 +18,9 @@ DEPENDENCIES="../osu/osu.Game.Rulesets.Catch/osu.Game.Rulesets.Catch.csproj
 
 dotnet sln $SLN add $DEPENDENCIES
 
+# This dependency is to include strain within the JSON output.
+dotnet add "PerformanceCalculator/PerformanceCalculator.csproj" reference "PerformanceCalculatorGUI/PerformanceCalculatorGUI.csproj"
+
 for CSPROJ in "${PROJECTS[@]}"
 do
     dotnet remove $CSPROJ package ppy.osu.Game
