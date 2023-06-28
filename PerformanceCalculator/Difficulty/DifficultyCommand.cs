@@ -140,11 +140,9 @@ namespace PerformanceCalculator.Difficulty
             // Get the ruleset
             var ruleset = LegacyHelper.GetRulesetFromLegacyID(Ruleset ?? beatmap.BeatmapInfo.Ruleset.OnlineID);
             var mods = NoClassicMod ? getMods(ruleset) : LegacyHelper.ConvertToLegacyDifficultyAdjustmentMods(ruleset, getMods(ruleset));
-            var attributes = ruleset.CreateDifficultyCalculator(beatmap).Calculate(mods);
             var difficultyCalculator = RulesetHelper.GetExtendedDifficultyCalculator(beatmap.BeatmapInfo.Ruleset, beatmap);
 
             // This is necessary to populate the skills property.
-            difficultyCalculator.Calculate();
             var attributes = difficultyCalculator.Calculate(mods);
 
             var strains = Array.Empty<Skill>();
