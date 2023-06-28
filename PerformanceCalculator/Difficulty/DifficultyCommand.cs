@@ -145,6 +145,7 @@ namespace PerformanceCalculator.Difficulty
 
             // This is necessary to populate the skills property.
             difficultyCalculator.Calculate();
+            var attributes = difficultyCalculator.Calculate(mods);
 
             var strains = Array.Empty<Skill>();
 
