@@ -6,6 +6,8 @@ This branch adds `strains` to the JSON output (i.e. with the `-j` flag in `dotne
 dotnet run -- difficulty 767046 -j
 ```
 
+> `strains` is truncated to 3 elements.
+
 ```json
 {
   "errors": [],
