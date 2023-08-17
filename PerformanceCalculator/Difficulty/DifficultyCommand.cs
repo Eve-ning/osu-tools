@@ -42,16 +42,6 @@ namespace PerformanceCalculator.Difficulty
         public string[] Mods { get; }
 
         [UsedImplicitly]
-        [Option(Template = "-j|--json", Description = "Output results as JSON.")]
-        public bool OutputJson { get; }
-
-        // Option for strain to be excluded from the JSON output, RFC on PR.
-        // This will simply toggle pulling strain, however I don't see it being necessary.
-        // [UsedImplicitly]
-        // [Option(Template = "-s|--strain", Description = "Evaluates Strain.")]
-        // public bool IncludeStrain { get; }
-
-        [UsedImplicitly]
         [Option(Template = "-nc|--no-classic", Description = "Excludes the classic mod.")]
         public bool NoClassicMod { get; }
 
